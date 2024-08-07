@@ -1,0 +1,74 @@
+{
+    "version": 8,
+    "cmakeMinimumRequired": {
+        "major": 3,
+        "minor": 28,
+        "patch": 0
+    },
+    "configurePresets": [
+        {
+            "name": "ConfigBase",
+            "hidden": true,
+            "cacheVariables": {
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/build/${presetName}/install"
+            }
+        },
+        {
+            "name": "Release",
+            "displayName": "configure for release",
+            "description": "Unix release build",
+            "generator": "Unix Makefiles",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "installDir": "${sourceDir}/build/install",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release"
+            },
+            "inherits": [
+                "ConfigBase"
+            ]
+        },
+        {
+            "name": "Debug",
+            "displayName": "configure for debug",
+            "description": "Unix debug build",
+            "generator": "Unix Makefiles",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "installDir": "${sourceDir}/build/install",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug"
+            },
+            "inherits": [
+                "ConfigBase"
+            ]
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "Debug build",
+            "description": "debug build",
+            "displayName": "build for debug",
+            "configurePreset": "Debug",
+            "jobs": 8
+        }
+    ],
+    "testPresets": [
+        {
+            "name": "Debug test",
+            "description": "test debug",
+            "displayName": "test w/ debug",
+            "configurePreset": "Debug"
+        },
+        {
+            "name": "Release test",
+            "description": "test release",
+            "displayName": "test w/ release",
+            "configurePreset": "Release"
+        }
+    ],
+    "packagePresets": [
+        {
+            "name": "Debug package",
+            "configurePreset": "Debug"
+        }
+    ]
+}

@@ -1,0 +1,41 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "cmake",
+			"label": "CMake: config for debug",
+			"command": "configure",
+			"preset": "Debug",
+			"problemMatcher": [],
+			"detail": "Configure preset task"
+		},
+		{
+			"type": "cmake",
+			"label": "CMake: config for release",
+			"command": "configure",
+			"preset": "Release",
+			"problemMatcher": [],
+			"detail": "Configure preset task"
+		},
+		{
+			"type": "cmake",
+			"label": "CMake: debug build",
+			"command": "build",
+			"preset": "${command:cmake.activeBuildPresetName}",
+			"problemMatcher": [],
+			"detail": "Build preset task"
+		},
+		{
+			"type": "cmake",
+			"label": "CMake: release build",
+			"command": "build",
+			"targets": [
+				"all"
+			],
+			"preset": "${command:cmake.activeBuildPresetName}",
+			"group": "build",
+			"problemMatcher": [],
+			"detail": "Release build task"
+		}
+	]
+}
