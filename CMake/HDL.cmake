@@ -8,6 +8,7 @@ endif()
 set(HDL_INCLUDED TRUE)
 
 find_package(iverilog)
+find_package(modelsim)
 
 if (${IVERILOG_FOUND})
     set(HDL_COMPILER ${IVERILOG_EXECUTABLE})
@@ -55,10 +56,18 @@ function(hdl_add_module module_name)
         set(TARGET_ALL "")
     endif()
 
+if (${IVERILOG_FOUND})
     add_custom_target(${module_name}
         ${TARGET_ALL}
         COMMAND ${IVERILOG_EXECUTABLE} -o ${module_name} ${ARG_DEPENDS}
     )
+elseif(${MODELSIM_FOUND})
+    add_custom_target(${module_name}
+        ${TARGET_ALL}
+        COMMAND ${VLIB_EXECUTABLE} work
+        COMMAND ${VSIM_EXECUTABLE} ${ARG_DEPENDS}
+    )
+endif()
 
     set_property(TARGET ${module_name} PROPERTY depends ${ARG_DEPENDS})
 
@@ -99,9 +108,26 @@ function(hdl_add_testbench testbench_name)
 
     list(APPEND dut_sources ${ARG_DEPENDS})
 
+if (${IVERILOG_FOUND})
     add_custom_target(${testbench_name}
         ${TARGET_ALL}
         COMMAND ${IVERILOG_EXECUTABLE} -o ${testbench_name} ${dut_sources}
     )
+elseif(${MODELSIM_FOUND})
+    if (NOT EXISTS "work")
+        add_custom_target(${testbench_name}
+            ${TARGET_ALL}
+            COMMAND ${VLIB_EXECUTABLE} work
+            COMMAND ${VLOG_EXECUTABLE} ${dut_sources}
+            COMMAND ${VSIM_EXECUTABLE} ${testbench_name} -c -do "run -all"
+        )
+    else()
+        add_custom_target(${testbench_name}
+            ${TARGET_ALL}
+            COMMAND ${VLOG_EXECUTABLE} ${dut_sources}
+            COMMAND ${VSIM_EXECUTABLE} ${testbench_name} -c -do "run -all"
+        )
+    endif()
+endif()
 
 endfunction()

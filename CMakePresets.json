@@ -9,37 +9,60 @@
         {
             "name": "ConfigBase",
             "hidden": true,
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "installDir": "${sourceDir}/build/install",
             "cacheVariables": {
                 "CMAKE_INSTALL_PREFIX": "${sourceDir}/build/${presetName}/install"
             }
         },
         {
-            "name": "Release",
-            "displayName": "configure for release",
-            "description": "Unix release build",
+            "name": "LinuxConfigBase",
+            "hidden": true,
             "generator": "Unix Makefiles",
-            "binaryDir": "${sourceDir}/build/${presetName}",
-            "installDir": "${sourceDir}/build/install",
-            "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Release"
-            },
-            "inherits": [
-                "ConfigBase"
-            ]
+            "inherits": "ConfigBase",
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Linux"
+            }
         },
         {
-            "name": "Debug",
+            "name": "WindowsConfigBase",
+            "hidden": true,
+            "generator": "Visual Studio 17 2022",
+            "inherits": "ConfigBase",
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Windows"
+            }
+        },
+        {
+            "name": "Linux-Release",
+            "inherits": "LinuxConfigBase",
+            "displayName": "configure for release",
+            "description": "Unix release build",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release"
+            }
+        },
+        {
+            "name": "Linux-Debug",
+            "inherits": "LinuxConfigBase",
             "displayName": "configure for debug",
             "description": "Unix debug build",
-            "generator": "Unix Makefiles",
-            "binaryDir": "${sourceDir}/build/${presetName}",
-            "installDir": "${sourceDir}/build/install",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Debug"
-            },
-            "inherits": [
-                "ConfigBase"
-            ]
+            }
+        },
+        {
+            "name": "Windows-Release",
+            "inherits": "WindowsConfigBase",
+            "displayName": "configure for release",
+            "description": "Windows release build",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release"
+            }
         }
     ],
     "buildPresets": [

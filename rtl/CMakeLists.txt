@@ -2,3 +2,4 @@
 # SPDX-License-Identifier: Apache-2.0
 
 hdl_add_module(counter DEPENDS counter.sv)
+hdl_add_module(adder DEPENDS adder.sv)
